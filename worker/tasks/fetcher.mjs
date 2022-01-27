@@ -1,5 +1,5 @@
 
-const axios = require('axios');
+import axios from 'axios';
 
 import {createClient} from 'redis';
 
@@ -34,13 +34,16 @@ import {createClient} from 'redis';
 
 async function getJobs() {
     try {
+        const client = createClient();
         const jobs = await axios.get("https://api.lever.co/v0/postings/lever?mode=json&limit=50");
         let jobNames = [];
         for (let i = 0; i < jobs["data"].length; i++) {
             jobNames.push(jobs["data"][i]["text"]);
         }
-        console.log(jobNames);
-        const success = await client.set('lever',jobNames)
+        // console.log(jobNames);
+        await client.connect();
+        const success = await client.set('lever',JSON.stringify(jobNames))
+        console.log(success)
         return jobNames;
     } catch(error) {
         console.log("There was an error: ", error);
