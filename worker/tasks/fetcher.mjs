@@ -1,4 +1,4 @@
-
+//axios for API pull, redis for data store
 import axios from 'axios';
 
 import {createClient} from 'redis';
@@ -35,24 +35,41 @@ import {createClient} from 'redis';
 async function getJobs() {
     try {
         const client = createClient();
-        const jobs = await axios.get("https://api.lever.co/v0/postings/lever?mode=json&limit=50");
+        const jobs = await axios.get("https://api.lever.co/v0/postings/lever?mode=json&limit=100");
         let jobNames = [];
         for (let i = 0; i < jobs["data"].length; i++) {
             jobNames.push(jobs["data"][i]["text"]);
         }
         // console.log(jobNames);
+        // const jrJobs = jobNames.filter(job =>{
+        //     const jobTitle = jobNames.text.toLowerCase();
+        //             if (jobTitle.includes('senior') || jobTitle.includes('manager') || jobTitle.includes('product') || jobTitle.includes('architect')) {
+        //                 return false;
+        //             }
+        //             return true;
+        // })
         await client.connect();
-        const success = await client.set('lever',JSON.stringify(jobNames))
-        console.log(success)
+        const success = await client.set('lever',JSON.stringify(jobNames));
+        console.log(jobNames);
+        
+        // for (job in jobNames) {
+        //     jobTitle = job.toLowerCase();
+        // }
+
+        
+        
+    
+        // console.log(client);
+        console.log(success);
+        
         return jobNames;
     } catch(error) {
         console.log("There was an error: ", error);
         return [];
     }
+
 }
-
-
 
 getJobs();
 
-// module.exports = getJobs;
+export {getJobs}
