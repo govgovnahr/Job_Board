@@ -20,6 +20,9 @@ app.get('/jobs', async (req, res) => {
   const client = redis.createClient();
   await client.connect();
     const jobs = await client.get('lever');
+
+    res.header('Access-Control-Allow-Origin', "http://localhost:3000")
+
     console.log(JSON.parse(jobs.length));
 
 

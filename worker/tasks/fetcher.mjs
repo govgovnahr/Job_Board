@@ -36,9 +36,9 @@ async function getJobs() {
     try {
         const client = createClient();
         const jobs = await axios.get("https://api.lever.co/v0/postings/lever?mode=json&limit=100");
-        let jobNames = [];
+        let allJobs = [];
         for (let i = 0; i < jobs["data"].length; i++) {
-            jobNames.push(jobs["data"][i]["text"]);
+            allJobs.push(jobs["data"][i]);
         }
         // console.log(jobNames);
         // const jrJobs = jobNames.filter(job =>{
@@ -49,8 +49,8 @@ async function getJobs() {
         //             return true;
         // })
         await client.connect();
-        const success = await client.set('lever',JSON.stringify(jobNames));
-        console.log(jobNames);
+        const success = await client.set('lever',JSON.stringify(allJobs));
+        console.log(allJobs);
         
         // for (job in jobNames) {
         //     jobTitle = job.toLowerCase();
@@ -62,7 +62,7 @@ async function getJobs() {
         // console.log(client);
         console.log(success);
         
-        return jobNames;
+        return allJobs;
     } catch(error) {
         console.log("There was an error: ", error);
         return [];

@@ -8,8 +8,8 @@ export default function Job( {job}) {
 
     return (
         <div className={'job'}>
-            <div>{job.title}</div> 
-             <div>{job.company}</div>
+            <div>{job.text}</div> 
+            <div>{job.categories.location}</div>
         </div>
     )
 }
